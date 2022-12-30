@@ -23,6 +23,20 @@
             width: 100%;
             margin: 0px;
         }
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: rgba(255, 153, 153, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            color: rgb(160, 95, 95);
+        }
+
+        .info h2 {
+            margin: 0 0 5px;
+            color: rgb(24, 23, 23);
+        }
     </style>
 </head>
 
@@ -147,9 +161,21 @@
             map.addLayer(Bangunan); //Bangunan ditampilkan ketika halaman dipanggil
         });
 
+
+        var title = new L.Control();
+        title.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info');
+            this.update();
+            return this._div;
+        };
+        title.update = function () {
+            this._div.innerHTML = '<h2>Peta Studio Kawasan</h2>Timbulharjo,Bantul.Yogyakarta'
+        };
+        title.addTo(map);
+
         var baseMaps = { //list basemap
             'Open Street Map': basemap,
-         
+
         };
         var Layers = {  //list layer
             'Bangunan': Bangunan,
@@ -158,7 +184,38 @@
         };
         var layerControl = L.control.layers(baseMaps, Layers, { collapsed: false });
         layerControl.addTo(map);
+
+        L.control.scale({
+            maxWidth: 150,
+            imperial: false,
+            position: "bottomright",
+
+        }).addTo(map);
+
+
+        L.Control.Watermark = L.Control.extend({
+            onAdd: function (map) {
+                var img = L.DomUtil.create('img');
+                img.src = 'https://t-2.tstatic.net/tribunnewswiki/foto/bank/images/institut-teknologi-nasional-yogyakartalogo.jpg'; //Image URL
+                img.style.width = '200px'; //Image Size
+                img.style.background = "rgba(0,0,0,0.5)";
+                img.style.padding = "5px"
+                return img;
+            },
+            onRemove: function (map) {
+                // Nothing to do here
+            }
+        });
+        L.control.watermark = function (opts) {
+            return new L.Control.Watermark(opts);
+        }
+        L.control.watermark({ position: 'bottomleft' }).addTo(map);
+
+
+
+
     </script>
+
 </body>
 
 </html>
